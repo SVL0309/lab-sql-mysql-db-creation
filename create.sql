@@ -19,10 +19,10 @@ USE `mydb` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`salespersons` (
   `salesperson` INT NOT NULL AUTO_INCREMENT,
-  `staff ID` INT NOT NULL,
+  `staff_ID` INT NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `store` VARCHAR(45) NOT NULL,
-  UNIQUE INDEX `staff ID_UNIQUE` (`staff ID` ASC) VISIBLE,
+  UNIQUE INDEX `staff ID_UNIQUE` (`staff_ID` ASC) VISIBLE,
   PRIMARY KEY (`salesperson`),
   UNIQUE INDEX `salesperson_UNIQUE` (`salesperson` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -32,9 +32,9 @@ ENGINE = InnoDB;
 -- Table `mydb`.`customers`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`customers` (
-  `customer ID` INT NOT NULL AUTO_INCREMENT,
+  `customer_id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `phone number` VARCHAR(45) NOT NULL,
+  `phone_number` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
   `address` VARCHAR(45) NOT NULL,
   `city` VARCHAR(45) NULL,
@@ -42,9 +42,9 @@ CREATE TABLE IF NOT EXISTS `mydb`.`customers` (
   `country` VARCHAR(45) NULL,
   `zip/postal code` INT NULL,
   `salespersons_salesperson` INT NOT NULL,
-  PRIMARY KEY (`customer ID`, `salespersons_salesperson`),
-  UNIQUE INDEX `customer ID_UNIQUE` (`customer ID` ASC) VISIBLE,
-  UNIQUE INDEX `phone number_UNIQUE` (`phone number` ASC) VISIBLE,
+  PRIMARY KEY (`customer_id`, `salespersons_salesperson`),
+  UNIQUE INDEX `customer ID_UNIQUE` (`customer_id` ASC) VISIBLE,
+  UNIQUE INDEX `phone number_UNIQUE` (`phone_number` ASC) VISIBLE,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
   INDEX `fk_customers_salespersons1_idx` (`salespersons_salesperson` ASC) VISIBLE,
   CONSTRAINT `fk_customers_salespersons1`
@@ -60,21 +60,20 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`cars` (
   `car` INT NOT NULL AUTO_INCREMENT,
-  `VIN` INT NOT NULL,
+  `VIN` VARCHAR(45) NOT NULL,
   `manufacturer` VARCHAR(45) NOT NULL,
   `model` VARCHAR(45) NOT NULL,
-  `year` DATE NOT NULL,
+  `year` YEAR(45) NOT NULL,
   `color` VARCHAR(45) NOT NULL,
   `customers_customer ID` INT NOT NULL,
   `salespersons_salesperson` INT NOT NULL,
-  UNIQUE INDEX `VIN_UNIQUE` (`VIN` ASC) VISIBLE,
   PRIMARY KEY (`car`),
   UNIQUE INDEX `car_UNIQUE` (`car` ASC) VISIBLE,
   INDEX `fk_cars_customers_idx` (`customers_customer ID` ASC) VISIBLE,
   INDEX `fk_cars_salespersons1_idx` (`salespersons_salesperson` ASC) VISIBLE,
   CONSTRAINT `fk_cars_customers`
     FOREIGN KEY (`customers_customer ID`)
-    REFERENCES `mydb`.`customers` (`customer ID`)
+    REFERENCES `mydb`.`customers` (`customer_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_cars_salespersons1`
@@ -97,10 +96,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.` invoices` (
   `salespersons_salesperson` INT NOT NULL,
   `customers_customer ID` INT NOT NULL,
   `customers_salespersons_salesperson` INT NOT NULL,
-  PRIMARY KEY (`invoice number`, `salespersons_salesperson`),
+  `cars_car` INT NOT NULL,
+  PRIMARY KEY (`invoice number`, `salespersons_salesperson`, `cars_car`),
   UNIQUE INDEX `invoice number_UNIQUE` (`invoice number` ASC) VISIBLE,
   INDEX `fk_ invoices_salespersons1_idx` (`salespersons_salesperson` ASC) VISIBLE,
   INDEX `fk_ invoices_customers1_idx` (`customers_customer ID` ASC, `customers_salespersons_salesperson` ASC) VISIBLE,
+  INDEX `fk_ invoices_cars1_idx` (`cars_car` ASC) VISIBLE,
   CONSTRAINT `fk_ invoices_salespersons1`
     FOREIGN KEY (`salespersons_salesperson`)
     REFERENCES `mydb`.`salespersons` (`salesperson`)
@@ -108,7 +109,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.` invoices` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ invoices_customers1`
     FOREIGN KEY (`customers_customer ID` , `customers_salespersons_salesperson`)
-    REFERENCES `mydb`.`customers` (`customer ID` , `salespersons_salesperson`)
+    REFERENCES `mydb`.`customers` (`customer_id` , `salespersons_salesperson`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_ invoices_cars1`
+    FOREIGN KEY (`cars_car`)
+    REFERENCES `mydb`.`cars` (`car`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

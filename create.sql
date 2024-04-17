@@ -19,10 +19,10 @@ USE `mydb` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`salespersons` (
   `salesperson` INT NOT NULL AUTO_INCREMENT,
-  `staff_ID` INT NOT NULL,
+  `staff_id` INT NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `store` VARCHAR(45) NOT NULL,
-  UNIQUE INDEX `staff ID_UNIQUE` (`staff_ID` ASC) VISIBLE,
+  UNIQUE INDEX `staff ID_UNIQUE` (`staff_id` ASC) VISIBLE,
   PRIMARY KEY (`salesperson`),
   UNIQUE INDEX `salesperson_UNIQUE` (`salesperson` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -43,10 +43,10 @@ CREATE TABLE IF NOT EXISTS `mydb`.`customers` (
   `zip/postal code` INT NULL,
   `salespersons_salesperson` INT NOT NULL,
   PRIMARY KEY (`customer_id`, `salespersons_salesperson`),
-  UNIQUE INDEX `customer ID_UNIQUE` (`customer_id` ASC) VISIBLE,
   UNIQUE INDEX `phone number_UNIQUE` (`phone_number` ASC) VISIBLE,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
   INDEX `fk_customers_salespersons1_idx` (`salespersons_salesperson` ASC) VISIBLE,
+  UNIQUE INDEX `customer_id_UNIQUE` (`customer_id` ASC) VISIBLE,
   CONSTRAINT `fk_customers_salespersons1`
     FOREIGN KEY (`salespersons_salesperson`)
     REFERENCES `mydb`.`salespersons` (`salesperson`)
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`cars` (
   `VIN` VARCHAR(45) NOT NULL,
   `manufacturer` VARCHAR(45) NOT NULL,
   `model` VARCHAR(45) NOT NULL,
-  `year` YEAR(45) NOT NULL,
+  `year` YEAR NOT NULL,
   `color` VARCHAR(45) NOT NULL,
   `customers_customer ID` INT NOT NULL,
   `salespersons_salesperson` INT NOT NULL,
@@ -88,7 +88,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.` invoices`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.` invoices` (
-  `invoice number` INT NOT NULL AUTO_INCREMENT,
+  `invoice_number` INT NOT NULL AUTO_INCREMENT,
   `date` DATE NOT NULL,
   `car` VARCHAR(45) NOT NULL,
   `customer` VARCHAR(45) NOT NULL,
@@ -97,8 +97,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.` invoices` (
   `customers_customer ID` INT NOT NULL,
   `customers_salespersons_salesperson` INT NOT NULL,
   `cars_car` INT NOT NULL,
-  PRIMARY KEY (`invoice number`, `salespersons_salesperson`, `cars_car`),
-  UNIQUE INDEX `invoice number_UNIQUE` (`invoice number` ASC) VISIBLE,
+  PRIMARY KEY (`invoice_number`, `salespersons_salesperson`, `cars_car`),
+  UNIQUE INDEX `invoice number_UNIQUE` (`invoice_number` ASC) VISIBLE,
   INDEX `fk_ invoices_salespersons1_idx` (`salespersons_salesperson` ASC) VISIBLE,
   INDEX `fk_ invoices_customers1_idx` (`customers_customer ID` ASC, `customers_salespersons_salesperson` ASC) VISIBLE,
   INDEX `fk_ invoices_cars1_idx` (`cars_car` ASC) VISIBLE,
